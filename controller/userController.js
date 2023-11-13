@@ -6,7 +6,6 @@ const createUser = async (req, res) => {
   try {
     const { name, email, password, mobile } = req.body;
     const { filename } = req.file || {};
-    console.log(req.body);
 
     // make password hash
     const hashedPassword = await bcrypt.hash(password, 11);
