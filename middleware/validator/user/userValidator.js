@@ -5,63 +5,69 @@ const path = require("path");
 
 const addUserValidator = [
   check("name")
-    .isLength({ min: 3 })
-    .withMessage("Name must be required")
+    .isLength({ min: 1 })
+    .withMessage("Name is required!")
+    .isAlpha("en-US", { ignore: " -" })
+    .withMessage("Name must not contain anything other than alphabet")
     .trim(),
   check("email")
     .isEmail()
-    .withMessage("Email must be required")
+    .withMessage("Invalid email address")
     .trim()
     .custom(async (value) => {
       try {
-        const user = await User.find({ email: value });
+        const user = await User.findOne({ email: value });
         if (user) {
-          throw Error("Email already is use!");
+          throw createError("Email already is use!");
         }
       } catch (err) {
-        throw Error(err.message);
+        throw createError(err.message);
       }
     }),
   check("mobile")
-    .isLength({ min: 11 })
-    .withMessage("Mobile must be required and lessthen 11 chars")
-    .trim()
+    .isMobilePhone("bn-BD", {
+      strictMode: true,
+    })
+    .withMessage("Mobile number must be a valid Bangladeshi mobile number")
     .custom(async (value) => {
       try {
-        const user = await User.find({ mobile: value });
+        const user = await User.findOne({ mobile: value });
         if (user) {
-          throw Error("Mobile already is use!");
+          throw createError("Mobile already is use!");
         }
       } catch (err) {
-        throw Error(err.message);
+        throw createError(err.message);
       }
     }),
   check("password")
-    .isLength({ min: 8 })
-    .withMessage("Mobile must be required and lessthen 8 chars")
-    .trim(),
+    .isStrongPassword()
+    .withMessage(
+      "Password must be at least 8 characters long & should contain at least 1 lowercase, 1 uppercase, 1 number & 1 symbol"
+    ),
 ];
 
-const addUserValidatorHandler = (req, res, next) => {
+const addUserValidatorHandler = function (req, res, next) {
   const errors = validationResult(req);
   const mappedErrors = errors.mapped();
   if (Object.keys(mappedErrors).length === 0) {
     next();
   } else {
-    // remove upload file
-    if (req.file) {
-      const { filename } = req.file;
+    // remove uploaded files
+    if (req.files.length > 0) {
+      const { filename } = req.files[0];
       unlink(
-        path.join(__dirname, `../../../uploads/avatars/${filename}`),
+        path.join(__dirname, `/../../../uploads/avatars/${filename}`),
         (err) => {
           if (err) console.log(err);
         }
       );
     }
+
+    // response the errors
+    res.status(500).json({
+      errors: mappedErrors,
+    });
   }
-  res.status(500).join({
-    error: mappedErrors,
-  });
 };
 
 module.exports = {

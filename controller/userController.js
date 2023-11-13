@@ -5,19 +5,25 @@ const bcrypt = require("bcrypt");
 const createUser = async (req, res) => {
   try {
     const { name, email, password, mobile } = req.body;
-    const { filename } = req.file || {};
-
-
+    let newUser;
     // make password hash
     const hashedPassword = await bcrypt.hash(password, 11);
-    const user = new User({
-      name,
-      email,
-      mobile,
-      password: hashedPassword,
-      avatar: filename || null,
-    });
-    const userData = await user.save();
+
+    if (req.files && req.files.length > 0) {
+      newUser = new User({
+        ...req.body,
+        password: hashedPassword,
+        avatar: req.files[0].filename,
+      });
+    } else {
+      newUser = new User({
+        ...req.body,
+        password: hashedPassword,
+        avatar: null,
+      });
+    }
+
+    const userData = await newUser.save();
     if (userData._id) {
       res.status(200).json({
         message: "User Create SuccessFull",

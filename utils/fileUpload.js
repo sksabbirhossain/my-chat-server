@@ -27,7 +27,7 @@ const uploader = (upload_path, file_size, allow_file_types, error_message) => {
       if (allow_file_types.includes(file.mimetype)) {
         cb(null, true);
       } else {
-        cb(error_message);
+        cb(Error(error_message));
       }
     },
   });
