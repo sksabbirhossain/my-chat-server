@@ -8,7 +8,11 @@ const avatarUpload = (req, res, next) => {
     "Only jpg, jpeg or png format allowed"
   );
   upload.single("avatar")(req, res, (err) => {
-    if (!err) {
+    if (err) {
+      res.status(500).json({
+        message: err,
+      });
+    } else {
       next();
     }
   });
