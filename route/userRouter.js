@@ -5,6 +5,7 @@ const {
   addUserValidator,
   addUserValidatorHandler,
 } = require("../middleware/validator/user/userValidator");
+const { loginUserValidator, loginUserValidationHandler } = require("../middleware/validator/user/userLoginValidator");
 
 const router = express.Router();
 
@@ -17,6 +18,6 @@ router.post(
   createUser
 );
 //login a user
-router.post("/login", loginUser);
+router.post("/login",loginUserValidator,loginUserValidationHandler, loginUser);
 
 module.exports = router;
