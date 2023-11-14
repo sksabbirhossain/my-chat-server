@@ -1,5 +1,6 @@
 const User = require("../model/userSchema");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 //register User
 const createUser = async (req, res) => {
@@ -41,6 +42,48 @@ const createUser = async (req, res) => {
   }
 };
 
+//login a user
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email });
+    if (user._id) {
+      //compare to user provide password
+      const comparePassword = await bcrypt.compare(password, user.password);
+      if (comparePassword) {
+        // make a user information object
+        const userInfo = { ...user._doc };
+
+        //delete password form userInfo
+        delete userInfo.password;
+
+        // create jwt token
+        const token = jwt.sign(userInfo, process.env.JWT_SECRET, {
+          expiresIn: "1h",
+        });
+        // send response
+        res.status(200).json({
+          user: userInfo,
+          accessToken: token,
+        });
+      } else {
+        res.status(404).json({
+          message: "Invalid user information",
+        });
+      }
+    } else {
+      res.status(404).json({
+        message: "Invalid user information",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   createUser,
+  loginUser,
 };
