@@ -18,10 +18,10 @@ const addUserValidator = [
       try {
         const user = await User.findOne({ email: value });
         if (user) {
-          throw createError("Email already is use!");
+          throw Error("Email already is use!");
         }
       } catch (err) {
-        throw createError(err.message);
+        throw Error(err.message);
       }
     }),
   check("mobile")
@@ -33,10 +33,10 @@ const addUserValidator = [
       try {
         const user = await User.findOne({ mobile: value });
         if (user) {
-          throw createError("Mobile already is use!");
+          throw Error("Mobile already is use!");
         }
       } catch (err) {
-        throw createError(err.message);
+        throw Error(err.message);
       }
     }),
   check("password")
