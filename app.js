@@ -4,6 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 
 const userRouter = require("./route/userRouter");
+const conversationRouter = require("./route/conversationRouter");
 
 const app = express();
 
@@ -24,6 +25,7 @@ mongoose
 
 // routes
 app.use("/api/user", userRouter);
+app.use("/api/conversation", conversationRouter);
 
 //listen
 app.listen(PORT, () => console.log(`listening port ${PORT}`));

@@ -2,23 +2,24 @@ const mongoose = require("mongoose");
 
 const conversationSchema = new mongoose.Schema(
   {
-    creator_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
-      required: true,
+    creator: {
+      id: mongoose.Types.ObjectId,
+      name: String,
+      avatar: String,
     },
     participant: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
-      required: true,
+      id: mongoose.Types.ObjectId,
+      name: String,
+      avatar: String,
     },
     last_updated: {
       type: Date,
-      required: true,
-      default: Date.now(),
+      default: Date.now,
     },
   },
   { timestamps: true }
 );
 
 const Conversation = mongoose.model("Conversation", conversationSchema);
+
+module.exports = Conversation;

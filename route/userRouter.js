@@ -17,6 +17,7 @@ router.post(
   addUserValidatorHandler,
   createUser
 );
+
 //login a user
 router.post("/login",loginUserValidator,loginUserValidationHandler, loginUser);
 
