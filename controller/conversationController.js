@@ -11,10 +11,10 @@ const getConversations = async (req, res) => {
     }
     const conversations = await Conversation.find({
       $or: [{ "creator.id": userid }, { "participant.id": userid }],
-    });
+    }).sort({ last_updated: -1 });
     res.status(200).json(conversations);
   } catch (err) {
-      console.log(err)
+    console.log(err);
     res.status(500).json({
       message: err.message,
     });
@@ -48,7 +48,32 @@ const addConversation = async (req, res) => {
   }
 };
 
+//edit a conversation
+const editConversation = async (req, res) => {
+  const conversationId = req.params.id;
+  const updateData = req.body;
+
+  try {
+    const updatedConversation = await Conversation.findOneAndUpdate(
+      { _id: conversationId },
+      { $set: updateData },
+      { new: true }
+    );
+
+    if (!updatedConversation) {
+      return res.status(404).json({ message: "Conversation not found" });
+    }
+
+    res.status(200).json(updatedConversation);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   getConversations,
   addConversation,
+  editConversation,
 };
