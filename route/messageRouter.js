@@ -3,6 +3,6 @@ const { sendMessage } = require("../controller/messageController");
 
 const router = express.Router();
 
-router.post("/add", sendMessage)
+router.post("/add/:id", sendMessage)
 
 module.exports = router;
