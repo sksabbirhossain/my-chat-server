@@ -1,5 +1,25 @@
 const Message = require("../model/messageSchema");
 
+//get message
+const getMessages = async (req, res) => {
+  try {
+    const conversation_id = req.params.id;
+    if (!conversation_id) {
+      res.status(500).json({
+        message: "user id is required!",
+      });
+    }
+    const messages = await Message.find({
+      conversation_id: conversation_id,
+    });
+    res.status(200).json(messages);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
 //send message
 const sendMessage = async (req, res) => {
   const { message, sender, receiver, date_time } = req.body;
@@ -37,4 +57,5 @@ const sendMessage = async (req, res) => {
 
 module.exports = {
   sendMessage,
+  getMessages,
 };
