@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 
 const userRouter = require("./route/userRouter");
 const conversationRouter = require("./route/conversationRouter");
+const messageRouter = require("./route/messageRouter");
 
 const app = express();
 
@@ -26,6 +27,7 @@ mongoose
 // routes
 app.use("/api/user", userRouter);
 app.use("/api/conversation", conversationRouter);
+app.use("/api/message", messageRouter);
 
 //listen
 app.listen(PORT, () => console.log(`listening port ${PORT}`));
