@@ -102,7 +102,7 @@ const getUser = async (req, res) => {
       res.status(200).json(userInfo);
     } else {
       res.status(500).json({
-        message: "Email is required!",
+        message: "Email is not Valid!",
       });
     }
   } catch (err) {
