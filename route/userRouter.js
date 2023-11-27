@@ -1,5 +1,5 @@
 const express = require("express");
-const { createUser, loginUser } = require("../controller/userController");
+const { createUser, loginUser, getUser } = require("../controller/userController");
 const avatarUpload = require("../middleware/user/avatarUpload");
 const {
   addUserValidator,
@@ -19,6 +19,9 @@ router.post(
 );
 
 //login a user
-router.post("/login",loginUserValidator,loginUserValidationHandler, loginUser);
+router.post("/login", loginUserValidator, loginUserValidationHandler, loginUser);
+
+//get a user by email
+router.get("/:email", getUser)
 
 module.exports = router;

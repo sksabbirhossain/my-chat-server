@@ -46,7 +46,7 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
-    
+
     if (user && user._id) {
       //compare to user provide password
       const comparePassword = await bcrypt.compare(password, user.password);
@@ -83,7 +83,37 @@ const loginUser = async (req, res) => {
   }
 };
 
+//get a user by email
+const getUser = async (req, res) => {
+  try {
+    const { email } = req.params;
+    if (!email) {
+      res.status(404).json({
+        message: "Email is required!",
+      });
+    }
+
+    const user = await User.findOne({ email: email });
+    if (user && user._id) {
+      // make a user information object
+      const userInfo = { ...user._doc };
+      //delete password form userInfo
+      delete userInfo.password;
+      res.status(200).json(userInfo);
+    } else {
+      res.status(500).json({
+        message: "Email is required!",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
+  getUser,
 };

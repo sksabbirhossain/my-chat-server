@@ -26,7 +26,7 @@ const sendMessage = async (req, res) => {
   const conversation_id = req.params.id;
   try {
     if (!conversation_id) {
-      res.status(404).json({
+      res.status(500).json({
         message: "conversation id is required!",
       });
     }
